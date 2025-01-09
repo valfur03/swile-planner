@@ -1,20 +1,12 @@
-import { Chart } from "@/components/Chart/Chart";
-import { getSwileOperationsUntilLatestCredit } from "@/lib/swile/operations";
-import { buildPlannedPaymentsGraphData } from "@/lib/graph";
-import { EmptyChart } from "@/components/Chart/EmptyChart";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function Home() {
-  const operations = await getSwileOperationsUntilLatestCredit();
-  const graphData = await buildPlannedPaymentsGraphData(operations);
-
   return (
-    <>
-      <header className="text-center w-full my-6 md:my-10 px-4 flex justify-center">
-        <h1 className="max-w-xl">Qu&apos;ai-je utilisé sur ma Swile ?</h1>
-      </header>
-      <main className="w-full px-4 flex justify-center">
-        {graphData !== null ? <Chart data={graphData} /> : <EmptyChart />}
-      </main>
-    </>
+    <main className="w-full flex justify-center items-center h-screen">
+      <Button asChild>
+        <Link href="/graph">Accéder au graph</Link>
+      </Button>
+    </main>
   );
 }
