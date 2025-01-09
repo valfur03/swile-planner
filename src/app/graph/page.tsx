@@ -9,6 +9,7 @@ import { ChartData } from "@/components/Chart/shared/types/chart-data";
 import { LoadingChart } from "@/components/Chart/LoadingChart";
 import { useRouter } from "next/navigation";
 import { SWILE_TOKEN_LS_KEY } from "@/data/swile/constants";
+import { Button } from "@/components/ui/button";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartData | null>(null);
@@ -16,6 +17,11 @@ export default function Graph() {
   const router = useRouter();
 
   const token = localStorage.getItem(SWILE_TOKEN_LS_KEY);
+
+  const logout = () => {
+    localStorage.removeItem(SWILE_TOKEN_LS_KEY);
+    router.push("/");
+  };
 
   useEffect(() => {
     if (token === null) {
@@ -33,8 +39,13 @@ export default function Graph() {
 
   return (
     <>
-      <header className="text-center w-full my-6 md:my-10 px-4 flex justify-center">
-        <h1 className="max-w-xl">Qu&apos;ai-je utilisé sur ma Swile ?</h1>
+      <header className="text-center w-full mt-2 mb-6 md:my-10 px-4 flex items-center justify-center">
+        <div className="max-w-xl w-full flex flex-col justify-center gap-2 items-end">
+          <Button variant="link" onClick={logout}>
+            Se déconnecter
+          </Button>
+          <h1>Qu&apos;ai-je utilisé sur ma Swile ?</h1>
+        </div>
       </header>
       <main className="w-full px-4 flex justify-center">
         {graphData !== null ? (
