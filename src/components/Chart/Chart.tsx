@@ -39,6 +39,7 @@ export const Chart = ({ data }: ChartProps) => {
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="date"
+            name="Date"
             tickLine={false}
             axisLine={false}
             tickMargin={8}
@@ -46,6 +47,7 @@ export const Chart = ({ data }: ChartProps) => {
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
           <Line
             dataKey="amount.value"
+            name="Dépensé"
             type={lineType}
             stroke="var(--color-current)"
             strokeWidth={lineStrokeWidth}
@@ -53,6 +55,7 @@ export const Chart = ({ data }: ChartProps) => {
           />
           <Line
             dataKey="plannedAmount.value"
+            name="Prévu"
             type={lineType}
             stroke="var(--color-planned)"
             strokeWidth={lineStrokeWidth}
