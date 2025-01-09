@@ -35,7 +35,7 @@ export default function Graph() {
     })
       .then((operations) => buildPlannedPaymentsGraphData(operations))
       .then((data) => setGraphData(data))
-      .finally(() => setIsLoading(true));
+      .finally(() => setIsLoading(false));
   }, [router]);
 
   if (token === null) {
