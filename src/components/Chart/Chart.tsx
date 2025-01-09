@@ -31,7 +31,10 @@ export const Chart = ({ data }: ChartProps) => {
 
   return (
     <>
-      <ChartContainer config={chartConfig} className="max-w-2xl min-h-[200px]">
+      <ChartContainer
+        config={chartConfig}
+        className="w-full max-w-2xl min-h-[200px]"
+      >
         <LineChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis
