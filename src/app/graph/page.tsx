@@ -42,7 +42,7 @@ export default function Graph() {
 
   return (
     <>
-      <header className="text-center w-full mt-2 mb-6 md:my-10 px-4 flex items-center justify-center">
+      <header className="text-center w-full mt-2 mb-6 md:mb-10 md:mt-3 px-4 flex items-center justify-center">
         <div className="max-w-xl w-full flex flex-col justify-center gap-2 items-end">
           <Button variant="link" onClick={logout}>
             Se déconnecter
