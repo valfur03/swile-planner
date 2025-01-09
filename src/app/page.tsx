@@ -1,10 +1,10 @@
 import { Chart } from "@/components/Chart/Chart";
-import { getSwileOperations } from "@/lib/swile/operations";
+import { getSwileOperationsUntilLatestCredit } from "@/lib/swile/operations";
 import { buildPlannedPaymentsGraphData } from "@/lib/graph";
 import { EmptyChart } from "@/components/Chart/EmptyChart";
 
 export default async function Home() {
-  const operations = await getSwileOperations();
+  const operations = await getSwileOperationsUntilLatestCredit();
   const graphData = await buildPlannedPaymentsGraphData(operations.items);
 
   return (
