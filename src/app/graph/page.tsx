@@ -8,13 +8,14 @@ import { useEffect, useState } from "react";
 import { ChartData } from "@/components/Chart/shared/types/chart-data";
 import { LoadingChart } from "@/components/Chart/LoadingChart";
 import { useRouter } from "next/navigation";
+import { SWILE_TOKEN_LS_KEY } from "@/data/swile/constants";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  const token = localStorage.getItem("swileToken");
+  const token = localStorage.getItem(SWILE_TOKEN_LS_KEY);
 
   useEffect(() => {
     if (token === null) {
