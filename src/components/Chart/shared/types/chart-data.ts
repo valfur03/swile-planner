@@ -1,5 +1,6 @@
 export type ChartData = Array<{
-  date: string;
+  dateStr: string;
+  dateLongStr: string;
   amount: {
     value: number;
   } | null;

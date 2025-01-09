@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/chart";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 import { ChartData } from "@/components/Chart/shared/types/chart-data";
+import { formatDateAsHumanReadable } from "@/lib/date/string";
 
 const chartConfig = {
   current: {
@@ -30,15 +31,16 @@ export const Chart = ({ data }: ChartProps) => {
   const lineHasDot = false;
 
   return (
-    <>
-      <ChartContainer
-        config={chartConfig}
-        className="w-full max-w-2xl min-h-[200px]"
-      >
+    <div className="w-full max-w-2xl">
+      <p className="mb-2">
+        <span className="font-semibold">Période :</span> {data[0].dateLongStr} –{" "}
+        {data[data.length - 1].dateLongStr}
+      </p>
+      <ChartContainer config={chartConfig} className="w-full min-h-[200px]">
         <LineChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="date"
+            dataKey="dateStr"
             name="Date"
             tickLine={false}
             axisLine={false}
@@ -63,6 +65,6 @@ export const Chart = ({ data }: ChartProps) => {
           />
         </LineChart>
       </ChartContainer>
-    </>
+    </div>
   );
 };
