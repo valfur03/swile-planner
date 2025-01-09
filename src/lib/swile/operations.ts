@@ -62,7 +62,7 @@ export async function getSwileOperationsUntilLatestCredit(
     const response = await fetchSwileOperations(options);
 
     if (response === null) {
-      return operations;
+      throw new Error("Unexpected error on Swile operations fetch.");
     }
 
     const { has_more, items } = response;

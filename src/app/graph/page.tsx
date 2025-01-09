@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
@@ -35,6 +36,9 @@ export default function Graph() {
     })
       .then((operations) => buildPlannedPaymentsGraphData(operations))
       .then((data) => setGraphData(data))
+      .catch(() =>
+        setError("Une erreur est survenue, le token est peut-être invalide."),
+      )
       .finally(() => setIsLoading(false));
   }, [router]);
 
@@ -58,7 +62,9 @@ export default function Graph() {
         ) : isLoading ? (
           <LoadingChart />
         ) : (
-          <EmptyChart />
+          <EmptyChart>
+            {error !== null ? error : "Aucune donnée trouvée."}
+          </EmptyChart>
         )}
       </main>
     </>
