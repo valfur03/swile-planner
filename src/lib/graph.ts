@@ -70,13 +70,16 @@ export async function buildPlannedPaymentsGraphData(
 
   let i = 0;
   let currentDate = getNextDayFromStringDate(latestAccountCredit.date);
+  const endDate = Temporal.PlainDate.from(operations[0].date);
   const data: ChartDataByPeriod = {
     startingDate: latestAccountCredit.date,
     items: [],
   };
-  while (i < plannedDaysNbr) {
+  while (i < plannedDaysNbr || isNowBeforeDate(endDate, currentDate)) {
     const isPlanned =
-      !isDateOnWeekend(currentDate) && isDateOnHoliday(holidays, currentDate);
+      !isDateOnWeekend(currentDate) &&
+      isDateOnHoliday(holidays, currentDate) &&
+      i < plannedDaysNbr;
 
     data.items = data.items.concat({
       dateStr: formatDateForGraph(currentDate),
