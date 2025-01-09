@@ -6,8 +6,6 @@ import {
 } from "@/types/swile";
 import { Temporal } from "@js-temporal/polyfill";
 import { TZ } from "@/data/date/constants";
-import { fromCentsToEur } from "@/lib/currency";
-import { getPaymentsOnDate } from "@/lib/swile/payments";
 
 export function getLatestSwileAccountCredit(operations: Array<SwileOperation>) {
   return operations.find(({ amount }) => amount.value > 0);
