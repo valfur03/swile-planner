@@ -16,7 +16,10 @@ export default function Graph() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  const token = localStorage.getItem(SWILE_TOKEN_LS_KEY);
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem(SWILE_TOKEN_LS_KEY)
+      : null;
 
   const logout = () => {
     localStorage.removeItem(SWILE_TOKEN_LS_KEY);
