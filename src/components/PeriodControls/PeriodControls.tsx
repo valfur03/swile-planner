@@ -6,6 +6,7 @@ export type PeriodControlsProps = UsePeriodControls & {
 };
 
 export const PeriodControls = ({
+  hasBefore,
   hasAfter,
   selectPreviousPeriod,
   selectNextPeriod,
@@ -17,7 +18,7 @@ export const PeriodControls = ({
     <div className="flex w-full justify-between max-w-2xl mt-4 md:mt-8">
       <Button
         variant={buttonVariant}
-        disabled={isLoading}
+        disabled={isLoading || !hasBefore}
         onClick={selectPreviousPeriod}
       >
         Précédent

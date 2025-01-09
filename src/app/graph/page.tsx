@@ -38,7 +38,12 @@ export default function Graph() {
       before: periodControls.beforeDate,
       token,
     })
-      .then((operations) => buildPlannedPaymentsGraphData(operations))
+      .then((operations) => {
+        if (!operations.hasMore) {
+          periodControls.signalHasNoMore();
+        }
+        return buildPlannedPaymentsGraphData(operations.items);
+      })
       .then((data) => setGraphData(data))
       .catch(() =>
         setError("Une erreur est survenue, le token est peut-être invalide."),

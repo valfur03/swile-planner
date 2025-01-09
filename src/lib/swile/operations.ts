@@ -53,7 +53,7 @@ export async function fetchSwileOperations(
 
 export async function getSwileOperationsUntilLatestCredit(
   options: SwileFetchOperationsQueryParams & SwileFetchOperationsOptions,
-): Promise<Array<SwileOperation>> {
+): Promise<{ hasMore: boolean; items: Array<SwileOperation> }> {
   let operations: Array<SwileOperation> = [];
   let latestCreditIndex = -1;
   let hasMore = true;
@@ -78,7 +78,7 @@ export async function getSwileOperationsUntilLatestCredit(
     options.before = operations[operations.length - 1].date;
   }
 
-  return operations.slice(0, latestCreditIndex + 1);
+  return { hasMore, items: operations.slice(0, latestCreditIndex + 1) };
 }
 
 export function getOperationsOnDate(
