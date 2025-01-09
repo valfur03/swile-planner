@@ -6,6 +6,8 @@ import {
 } from "@/types/swile";
 import { Temporal } from "@js-temporal/polyfill";
 import { TZ } from "@/data/date/constants";
+import { fromCentsToEur } from "@/lib/currency";
+import { getPaymentsOnDate } from "@/lib/swile/payments";
 
 export function getLatestSwileAccountCredit(operations: Array<SwileOperation>) {
   return operations.find(({ amount }) => amount.value > 0);
@@ -52,7 +54,7 @@ export async function fetchSwileOperations(
 }
 
 export async function getSwileOperationsUntilLatestCredit(
-  options: SwileFetchOperationsOptions,
+  options: SwileFetchOperationsQueryParams & SwileFetchOperationsOptions,
 ): Promise<Array<SwileOperation>> {
   let operations: Array<SwileOperation> = [];
   let latestCreditIndex = -1;
@@ -74,4 +76,23 @@ export async function getSwileOperationsUntilLatestCredit(
   }
 
   return operations.slice(0, latestCreditIndex + 1);
+}
+
+export function getOperationsOnDate(
+  operations: Array<SwileOperation>,
+  searchedDate: Temporal.PlainDate,
+) {
+  return operations.filter(({ date }) => {
+    const dateObj = Temporal.PlainDate.from(date);
+    return dateObj.equals(searchedDate);
+  });
+}
+
+export function getDateTimeOfAllOperationsThisDay(
+  operations: Array<SwileOperation>,
+  date: Temporal.PlainDate,
+) {
+  const paymentsThisDay = getOperationsOnDate(operations, date);
+
+  return paymentsThisDay.map(({ date }) => date);
 }

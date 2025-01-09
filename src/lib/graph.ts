@@ -1,5 +1,11 @@
-import { getLatestSwileAccountCredit } from "@/lib/swile/operations";
-import { ChartData } from "@/components/Chart/shared/types/chart-data";
+import {
+  getDateTimeOfAllOperationsThisDay,
+  getLatestSwileAccountCredit,
+} from "@/lib/swile/operations";
+import {
+  ChartData,
+  ChartDataByPeriod,
+} from "@/components/Chart/shared/types/chart-data";
 import { Temporal } from "@js-temporal/polyfill";
 import { SwileOperation } from "@/types/swile";
 import { defaultHolidays, fetchHolidays } from "@/lib/date/holidays";
@@ -64,23 +70,30 @@ export async function buildPlannedPaymentsGraphData(
 
   let i = 0;
   let currentDate = getNextDayFromStringDate(latestAccountCredit.date);
-  let data: ChartData = [];
+  const data: ChartDataByPeriod = {
+    startingDate: latestAccountCredit.date,
+    items: [],
+  };
   while (i < plannedDaysNbr) {
     const isPlanned =
       !isDateOnWeekend(currentDate) && isDateOnHoliday(holidays, currentDate);
 
-    data = data.concat({
+    data.items = data.items.concat({
       dateStr: formatDateForGraph(currentDate),
       dateLongStr: formatDateAsHumanReadable(currentDate),
       amount: buildPlannedPaymentsGraphDataAmount({
         operations,
-        currentData: data,
+        currentData: data.items,
         date: currentDate,
       }),
       plannedAmount: buildPlannedPaymentsGraphDataPlannedAmount({
-        currentData: data,
+        currentData: data.items,
         isPlanned,
       }),
+      operationsDate: getDateTimeOfAllOperationsThisDay(
+        operations,
+        currentDate,
+      ),
     });
 
     if (isPlanned) {

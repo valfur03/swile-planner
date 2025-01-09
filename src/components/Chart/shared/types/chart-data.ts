@@ -7,4 +7,10 @@ export type ChartData = Array<{
   plannedAmount: {
     value: number;
   };
+  operationsDate: Array<string>;
 }>;
+
+export type ChartDataByPeriod = {
+  startingDate: string;
+  items: ChartData;
+};
