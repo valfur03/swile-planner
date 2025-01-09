@@ -10,7 +10,7 @@ export function getWeekDayName(date: Temporal.PlainDate) {
   return WEEK_DAYS_NAME[LOCALE_CODE][date.dayOfWeek - 1];
 }
 
-export function formatCurrentDateForGraph(date: Temporal.PlainDate) {
+export function formatDateForGraph(date: Temporal.PlainDate) {
   const [, , day] = getDateUnitsWithPaddedZeros(date);
 
   return `${getWeekDayName(date).slice(0, 3)}. ${day}`;

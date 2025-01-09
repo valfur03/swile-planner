@@ -6,7 +6,7 @@ import { defaultHolidays, fetchHolidays } from "@/lib/date/holidays";
 import { isDateOnHoliday, isDateOnWeekend } from "@/lib/date/compare";
 import { DAILY_CREDIT } from "@/data/swile/constants";
 import { getSumOfAllPaymentsThisDay } from "@/lib/swile/payments";
-import { formatCurrentDateForGraph } from "@/lib/date/string";
+import { formatDateForGraph } from "@/lib/date/string";
 import { fromCentsToEur } from "@/lib/currency";
 import {
   addOneDayToPlainDate,
@@ -67,7 +67,7 @@ export async function buildPlannedPaymentsGraphData(
       !isDateOnWeekend(currentDate) && isDateOnHoliday(holidays, currentDate);
 
     data = data.concat({
-      date: formatCurrentDateForGraph(currentDate),
+      date: formatDateForGraph(currentDate),
       amount: buildPlannedPaymentsGraphDataAmount({
         operations,
         currentData: data,
