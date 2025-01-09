@@ -49,7 +49,7 @@ export default function Graph() {
         setError("Une erreur est survenue, le token est peut-être invalide."),
       )
       .finally(() => setIsLoading(false));
-  }, [router, periodControls, periodControls.beforeDate]);
+  }, [router, periodControls.beforeDate]);
 
   if (token === null) {
     return null;
