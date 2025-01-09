@@ -6,7 +6,6 @@ import {
 } from "@/types/swile";
 import { Temporal } from "@js-temporal/polyfill";
 import { TZ } from "@/data/date/constants";
-import { BEARER_TOKEN } from "@/data/swile/constants";
 
 export function getLatestSwileAccountCredit(operations: Array<SwileOperation>) {
   return operations.find(({ amount }) => amount.value > 0);
