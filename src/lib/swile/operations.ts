@@ -69,10 +69,15 @@ export async function getSwileOperationsUntilLatestCredit(
 
     const { has_more, items } = response;
 
+    if (items.length === 0) {
+      throw new Error("Unexpected empty response on Swile operations fetch.");
+    }
+
     operations = operations.concat(items);
 
-    latestCreditIndex = getLatestSwileAccountCreditIndex(items);
+    latestCreditIndex = getLatestSwileAccountCreditIndex(operations);
     hasMore = has_more;
+    options.before = operations[operations.length - 1].date;
   }
 
   return operations.slice(0, latestCreditIndex + 1);
