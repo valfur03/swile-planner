@@ -14,12 +14,8 @@ import { Button } from "@/components/ui/button";
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
-
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem(SWILE_TOKEN_LS_KEY)
-      : null;
 
   const logout = () => {
     localStorage.removeItem(SWILE_TOKEN_LS_KEY);
@@ -27,8 +23,10 @@ export default function Graph() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem(SWILE_TOKEN_LS_KEY);
+    setToken(token);
     if (token === null) {
-      return router.replace("login");
+      return router.replace("/login");
     }
 
     setIsLoading(true);
@@ -38,7 +36,11 @@ export default function Graph() {
       .then((operations) => buildPlannedPaymentsGraphData(operations))
       .then((data) => setGraphData(data))
       .finally(() => setIsLoading(true));
-  }, [router, token]);
+  }, [router]);
+
+  if (token === null) {
+    return null;
+  }
 
   return (
     <>
