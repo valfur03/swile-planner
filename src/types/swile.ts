@@ -8,6 +8,10 @@ export type SwileFetchOperationsQueryParams = {
   per?: number;
 };
 
+export type SwileFetchOperationsOptions = {
+  token: string;
+};
+
 export type SwileFetchOperationsOkResponse = {
   has_more: boolean;
   items: Array<SwileOperation>;

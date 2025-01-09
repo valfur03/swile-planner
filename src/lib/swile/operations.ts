@@ -1,5 +1,6 @@
 import {
   SwileFetchOperationsOkResponse,
+  SwileFetchOperationsOptions,
   SwileFetchOperationsQueryParams,
   SwileOperation,
 } from "@/types/swile";
@@ -18,26 +19,27 @@ export function getLatestSwileAccountCreditIndex(
 }
 
 export async function fetchSwileOperations(
-  queryParams: SwileFetchOperationsQueryParams = {},
+  options: SwileFetchOperationsQueryParams & SwileFetchOperationsOptions,
 ) {
   const {
     before = Temporal.Now.zonedDateTimeISO(TZ).add({ days: 1 }).toString({
       timeZoneName: "never",
     }),
     per = 20,
-  } = queryParams;
+    token,
+  } = options;
 
   const url = new URL("https://neobank-api.swile.co/api/v3/user/operations");
   url.searchParams.append("before", before);
   url.searchParams.append("per", String(per));
 
-  const options = {
+  const fetchOptions = {
     headers: {
-      Authorization: `Bearer ${BEARER_TOKEN}`,
+      Authorization: `Bearer ${token}`,
     },
   };
 
-  return fetch(url, options)
+  return fetch(url, fetchOptions)
     .then<SwileFetchOperationsOkResponse>((res) => {
       if (!res.ok) {
         throw new Error("Unexpected error on Swile operations fetch");
@@ -50,15 +52,15 @@ export async function fetchSwileOperations(
     });
 }
 
-export async function getSwileOperationsUntilLatestCredit(): Promise<
-  Array<SwileOperation>
-> {
+export async function getSwileOperationsUntilLatestCredit(
+  options: SwileFetchOperationsOptions,
+): Promise<Array<SwileOperation>> {
   let operations: Array<SwileOperation> = [];
   let latestCreditIndex = -1;
   let hasMore = true;
 
   while (latestCreditIndex < 0 && hasMore) {
-    const response = await fetchSwileOperations();
+    const response = await fetchSwileOperations(options);
 
     if (response === null) {
       return operations;

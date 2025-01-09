@@ -7,18 +7,28 @@ import { EmptyChart } from "@/components/Chart/EmptyChart";
 import { useEffect, useState } from "react";
 import { ChartData } from "@/components/Chart/shared/types/chart-data";
 import { LoadingChart } from "@/components/Chart/LoadingChart";
+import { useRouter } from "next/navigation";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  const token = localStorage.getItem("swileToken");
 
   useEffect(() => {
+    if (token === null) {
+      return router.replace("login");
+    }
+
     setIsLoading(true);
-    getSwileOperationsUntilLatestCredit()
+    getSwileOperationsUntilLatestCredit({
+      token,
+    })
       .then((operations) => buildPlannedPaymentsGraphData(operations))
       .then((data) => setGraphData(data))
       .finally(() => setIsLoading(true));
-  }, []);
+  }, [router, token]);
 
   return (
     <>
