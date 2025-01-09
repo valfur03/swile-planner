@@ -9,7 +9,7 @@ export default async function Home() {
 
   return (
     <>
-      <header className="text-center w-full my-6 px-4 flex justify-center">
+      <header className="text-center w-full my-6 md:my-10 px-4 flex justify-center">
         <h1 className="max-w-xl">Qu&apos;ai-je utilisé sur ma Swile ?</h1>
       </header>
       <main className="text-center w-full px-4 flex justify-center">
