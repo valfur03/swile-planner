@@ -1,8 +1,11 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { TZ } from "@/data/date/constants";
 
+export function getDayFromString(date: string) {
+  return Temporal.PlainDate.from(date);
+}
 export function getNextDayFromStringDate(date: string) {
-  return Temporal.PlainDate.from(date).add({
+  return getDayFromString(date).add({
     days: 1,
   });
 }

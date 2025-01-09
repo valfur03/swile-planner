@@ -15,3 +15,10 @@ export function isDateOnHoliday(
 
   return holidays[dateStr] === undefined;
 }
+
+export function areDateEqual(
+  date1: Temporal.PlainDate,
+  date2: Temporal.PlainDate,
+) {
+  return Temporal.PlainDate.compare(date1, date2) === 0;
+}

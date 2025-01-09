@@ -9,7 +9,11 @@ import {
 import { Temporal } from "@js-temporal/polyfill";
 import { SwileOperation } from "@/types/swile";
 import { defaultHolidays, fetchHolidays } from "@/lib/date/holidays";
-import { isDateOnHoliday, isDateOnWeekend } from "@/lib/date/compare";
+import {
+  areDateEqual,
+  isDateOnHoliday,
+  isDateOnWeekend,
+} from "@/lib/date/compare";
 import { DAILY_CREDIT } from "@/data/swile/constants";
 import { getSumOfAllPaymentsThisDay } from "@/lib/swile/payments";
 import {
@@ -19,6 +23,7 @@ import {
 import { fromCentsToEur } from "@/lib/currency";
 import {
   addOneDayToPlainDate,
+  getDayFromString,
   getNextDayFromStringDate,
   isNowBeforeDate,
 } from "@/lib/date/temporal";
@@ -67,9 +72,15 @@ export async function buildPlannedPaymentsGraphData(
   const plannedDaysNbr =
     fromCentsToEur(latestAccountCredit.amount.value) / DAILY_CREDIT;
   const holidays = await fetchHolidays().then(defaultHolidays);
+  const areCreditAndPaymentsOnSameDay = areDateEqual(
+    getDayFromString(latestAccountCredit.date),
+    getDayFromString(operations[operations.length - 2].date),
+  );
 
-  let i = 0;
-  let currentDate = getNextDayFromStringDate(latestAccountCredit.date);
+  let i = areCreditAndPaymentsOnSameDay ? -1 : 0;
+  let currentDate = areCreditAndPaymentsOnSameDay
+    ? Temporal.PlainDate.from(latestAccountCredit.date)
+    : getNextDayFromStringDate(latestAccountCredit.date);
   const endDate = Temporal.PlainDate.from(operations[0].date);
   const data: ChartDataByPeriod = {
     startingDate: latestAccountCredit.date,
@@ -79,7 +90,8 @@ export async function buildPlannedPaymentsGraphData(
     const isPlanned =
       !isDateOnWeekend(currentDate) &&
       isDateOnHoliday(holidays, currentDate) &&
-      i < plannedDaysNbr;
+      i < plannedDaysNbr &&
+      i >= 0;
 
     data.items = data.items.concat({
       dateStr: formatDateForGraph(currentDate),
@@ -99,7 +111,7 @@ export async function buildPlannedPaymentsGraphData(
       ),
     });
 
-    if (isPlanned) {
+    if (isPlanned || i < 0) {
       i += 1;
     }
     currentDate = addOneDayToPlainDate(currentDate);
