@@ -5,7 +5,7 @@ import { EmptyChart } from "@/components/Chart/EmptyChart";
 
 export default async function Home() {
   const operations = await getSwileOperationsUntilLatestCredit();
-  const graphData = await buildPlannedPaymentsGraphData(operations.items);
+  const graphData = await buildPlannedPaymentsGraphData(operations);
 
   return (
     <>
