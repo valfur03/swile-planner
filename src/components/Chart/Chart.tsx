@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/chart";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 import { ChartData } from "@/components/Chart/shared/types/chart-data";
-import { formatDateAsHumanReadable } from "@/lib/date/string";
 
 const chartConfig = {
   current: {
