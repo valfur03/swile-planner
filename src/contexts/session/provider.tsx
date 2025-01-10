@@ -40,7 +40,7 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
 
   const value = useMemo(
     () => ({ token, setToken: setTokenWithCache, clearToken, isLoading }),
-    [token, setTokenWithCache, clearToken],
+    [token, setTokenWithCache, clearToken, isLoading],
   );
 
   return (
