@@ -11,7 +11,7 @@ export type UsePeriodControls = {
   hasBefore: boolean;
   selectPreviousPeriod: () => void;
   selectNextPeriod: () => void;
-  signalHasNoMore: () => void;
+  signalHasNoMore: (beforeDate?: string) => void;
 };
 
 export const usePeriodControls = ({
@@ -19,9 +19,11 @@ export const usePeriodControls = ({
 }: UsePeriodControlsArgs): UsePeriodControls => {
   const [periodsDate, setPeriodsDate] = useState<Array<string>>([]);
   const [periodIndex, setPeriodIndex] = useState(0);
-  const [hasNoMore, setHasNoMore] = useState(false);
+  const [hasNoBefore, setHasNoBefore] = useState<string | null | undefined>(
+    null,
+  );
 
-  const hasBefore = !(hasNoMore && periodIndex === 0);
+  const hasBefore = !(hasNoBefore === periodsDate[periodIndex]);
   const hasAfter = periodIndex < periodsDate.length;
 
   const selectPreviousPeriod = () => {
@@ -44,8 +46,8 @@ export const usePeriodControls = ({
     setPeriodIndex((current) => current + 1);
   };
 
-  const signalHasNoMore = useCallback(() => {
-    setHasNoMore(true);
+  const signalHasNoMore = useCallback((beforeDate?: string) => {
+    setHasNoBefore(beforeDate);
   }, []);
 
   return {

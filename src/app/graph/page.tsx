@@ -4,7 +4,7 @@ import { getSwileOperationsUntilLatestCredit } from "@/lib/swile/operations";
 import { buildPlannedPaymentsGraphData } from "@/lib/graph";
 import { Chart } from "@/components/Chart/Chart";
 import { EmptyChart } from "@/components/Chart/EmptyChart";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LoadingChart } from "@/components/Chart/LoadingChart";
 import { useRouter } from "next/navigation";
 import { PeriodControls } from "@/components/PeriodControls/PeriodControls";
@@ -14,6 +14,7 @@ import { HomeHeader } from "@/sections/HomeHeader/HomeHeader";
 import { useSession } from "@/contexts/session/hook";
 import { useQuery } from "react-query";
 import { SWILE_OPERATIONS_QUERY_KEY } from "@/data/swile/constants";
+import { queryClient } from "@/app/providers";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartDataByPeriod | null>(null);
@@ -22,6 +23,31 @@ export default function Graph() {
     graphData,
   });
   const router = useRouter();
+
+  const queryGraphData = useCallback(
+    async (beforeDate?: string) => {
+      if (token === null) {
+        return null;
+      }
+
+      return getSwileOperationsUntilLatestCredit({
+        before: beforeDate,
+        token,
+      })
+        .then((operations) => {
+          if (!operations.hasMore) {
+            signalHasNoMore(beforeDate);
+          }
+          return buildPlannedPaymentsGraphData(operations.items);
+        })
+        .catch(() => {
+          throw new Error(
+            "Une erreur est survenue, le token est peut-être invalide.",
+          );
+        });
+    },
+    [token, signalHasNoMore],
+  );
 
   const {
     isLoading,
@@ -34,27 +60,7 @@ export default function Graph() {
       periodControls.beforeDate,
       signalHasNoMore,
     ],
-    queryFn: async () => {
-      if (token === null) {
-        return null;
-      }
-
-      return getSwileOperationsUntilLatestCredit({
-        before: periodControls.beforeDate,
-        token,
-      })
-        .then((operations) => {
-          if (!operations.hasMore) {
-            signalHasNoMore();
-          }
-          return buildPlannedPaymentsGraphData(operations.items);
-        })
-        .catch(() => {
-          throw new Error(
-            "Une erreur est survenue, le token est peut-être invalide.",
-          );
-        });
-    },
+    queryFn: () => queryGraphData(periodControls.beforeDate),
     retry: false,
   });
 
@@ -66,7 +72,23 @@ export default function Graph() {
 
   useEffect(() => {
     setGraphData(data);
-  }, [data]);
+    if (periodControls.hasBefore) {
+      console.log({
+        message: "prefetch",
+        token,
+        startingDate: data?.startingDate,
+      });
+      queryClient.prefetchQuery(
+        [
+          SWILE_OPERATIONS_QUERY_KEY,
+          token,
+          data?.startingDate,
+          signalHasNoMore,
+        ],
+        () => queryGraphData(data?.startingDate),
+      );
+    }
+  }, [data, periodControls.hasBefore, queryGraphData, signalHasNoMore, token]);
 
   if (token === null) {
     return null;

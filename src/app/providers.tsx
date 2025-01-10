@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 import { SessionProvider } from "@/contexts/session/provider";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export type ProvidersProps = PropsWithChildren;
 
