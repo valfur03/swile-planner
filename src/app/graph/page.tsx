@@ -12,39 +12,61 @@ import { usePeriodControls } from "@/hooks/use-period-controls";
 import { ChartDataByPeriod } from "@/components/Chart/shared/types/chart-data";
 import { HomeHeader } from "@/sections/HomeHeader/HomeHeader";
 import { useSession } from "@/contexts/session/hook";
+import { useQuery } from "react-query";
+import { SWILE_OPERATIONS_QUERY_KEY } from "@/data/swile/constants";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartDataByPeriod | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { token } = useSession();
   const { signalHasNoMore, ...periodControls } = usePeriodControls({
     graphData,
   });
   const router = useRouter();
 
+  const {
+    isLoading,
+    error = null,
+    data = null,
+  } = useQuery({
+    queryKey: [
+      SWILE_OPERATIONS_QUERY_KEY,
+      token,
+      periodControls.beforeDate,
+      signalHasNoMore,
+    ],
+    queryFn: async () => {
+      if (token === null) {
+        return null;
+      }
+
+      return getSwileOperationsUntilLatestCredit({
+        before: periodControls.beforeDate,
+        token,
+      })
+        .then((operations) => {
+          if (!operations.hasMore) {
+            signalHasNoMore();
+          }
+          return buildPlannedPaymentsGraphData(operations.items);
+        })
+        .catch(() => {
+          throw new Error(
+            "Une erreur est survenue, le token est peut-être invalide.",
+          );
+        });
+    },
+    retry: false,
+  });
+
   useEffect(() => {
     if (token === null) {
       return router.replace("/login");
     }
+  }, [token, router]);
 
-    setIsLoading(true);
-    getSwileOperationsUntilLatestCredit({
-      before: periodControls.beforeDate,
-      token,
-    })
-      .then((operations) => {
-        if (!operations.hasMore) {
-          signalHasNoMore();
-        }
-        return buildPlannedPaymentsGraphData(operations.items);
-      })
-      .then((data) => setGraphData(data))
-      .catch(() =>
-        setError("Une erreur est survenue, le token est peut-être invalide."),
-      )
-      .finally(() => setIsLoading(false));
-  }, [token, router, signalHasNoMore, periodControls.beforeDate]);
+  useEffect(() => {
+    setGraphData(data);
+  }, [data]);
 
   if (token === null) {
     return null;
@@ -60,7 +82,7 @@ export default function Graph() {
           <Chart data={graphData.items} />
         ) : (
           <EmptyChart>
-            {error !== null ? error : "Aucune donnée trouvée."}
+            {error instanceof Error ? error.message : "Aucune donnée trouvée."}
           </EmptyChart>
         )}
         <PeriodControls
