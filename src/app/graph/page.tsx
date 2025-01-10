@@ -17,7 +17,7 @@ import { SWILE_OPERATIONS_QUERY_KEY } from "@/data/swile/constants";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartDataByPeriod | null>(null);
-  const { token } = useSession();
+  const { token, isLoading: isLoadingToken } = useSession();
   const { signalHasNoMore, ...periodControls } = usePeriodControls({
     graphData,
   });
@@ -59,10 +59,10 @@ export default function Graph() {
   });
 
   useEffect(() => {
-    if (token === null) {
+    if (token === null && !isLoadingToken) {
       return router.replace("/login");
     }
-  }, [token, router]);
+  }, [token, isLoadingToken, router]);
 
   useEffect(() => {
     setGraphData(data);
