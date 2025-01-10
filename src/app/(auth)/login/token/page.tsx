@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default async function Login() {
+export default async function TokenLogin() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
