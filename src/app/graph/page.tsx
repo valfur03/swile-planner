@@ -77,7 +77,11 @@ export default function Graph() {
             {error !== null ? error : "Aucune donnée trouvée."}
           </EmptyChart>
         )}
-        <PeriodControls isLoading={isLoading} {...periodControls} />
+        <PeriodControls
+          isLoading={isLoading}
+          error={error}
+          {...periodControls}
+        />
       </main>
     </>
   );

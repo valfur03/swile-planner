@@ -6,6 +6,7 @@ export type PeriodControlsProps = Pick<
   "hasBefore" | "hasAfter" | "selectPreviousPeriod" | "selectNextPeriod"
 > & {
   isLoading?: boolean;
+  error?: never | null;
 };
 
 export const PeriodControls = ({
@@ -14,6 +15,7 @@ export const PeriodControls = ({
   selectPreviousPeriod,
   selectNextPeriod,
   isLoading,
+  error,
 }: PeriodControlsProps) => {
   const buttonVariant: ButtonProps["variant"] = "outline";
 
@@ -21,14 +23,14 @@ export const PeriodControls = ({
     <div className="flex w-full justify-between max-w-2xl mt-4 md:mt-8">
       <Button
         variant={buttonVariant}
-        disabled={isLoading || !hasBefore}
+        disabled={isLoading || error || !hasBefore}
         onClick={selectPreviousPeriod}
       >
         Précédent
       </Button>
       <Button
         variant={buttonVariant}
-        disabled={isLoading || !hasAfter}
+        disabled={isLoading || error || !hasAfter}
         onClick={selectNextPeriod}
       >
         Suivant
