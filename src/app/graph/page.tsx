@@ -73,11 +73,6 @@ export default function Graph() {
   useEffect(() => {
     setGraphData(data);
     if (periodControls.hasBefore) {
-      console.log({
-        message: "prefetch",
-        token,
-        startingDate: data?.startingDate,
-      });
       queryClient.prefetchQuery(
         [
           SWILE_OPERATIONS_QUERY_KEY,
