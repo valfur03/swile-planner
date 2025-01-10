@@ -32,7 +32,7 @@ export default function Graph() {
     const token = localStorage.getItem(SWILE_TOKEN_LS_KEY);
     setToken(token);
     if (token === null) {
-      return router.replace("/login");
+      return router.replace("/login/token");
     }
 
     setIsLoading(true);
