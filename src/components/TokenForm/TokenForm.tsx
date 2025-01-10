@@ -4,14 +4,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SWILE_TOKEN_LS_KEY } from "@/data/swile/constants";
+import { useSession } from "@/contexts/session/hook";
 
 export const TokenForm = () => {
-  const [token, setToken] = useState("");
+  const { setToken } = useSession();
+  const [tokenField, setTokenField] = useState("");
   const router = useRouter();
 
   const saveToken = () => {
-    localStorage.setItem(SWILE_TOKEN_LS_KEY, token);
+    setToken(tokenField);
     router.push("/graph");
   };
 
@@ -21,8 +22,8 @@ export const TokenForm = () => {
         type="text"
         name="token"
         placeholder="token"
-        value={token}
-        onChange={(e) => setToken(e.target.value)}
+        value={tokenField}
+        onChange={(e) => setTokenField(e.target.value)}
       />
       <Button onClick={saveToken}>Sauvegarder</Button>
     </div>

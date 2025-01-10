@@ -7,30 +7,23 @@ import { EmptyChart } from "@/components/Chart/EmptyChart";
 import { useEffect, useState } from "react";
 import { LoadingChart } from "@/components/Chart/LoadingChart";
 import { useRouter } from "next/navigation";
-import { SWILE_TOKEN_LS_KEY } from "@/data/swile/constants";
 import { PeriodControls } from "@/components/PeriodControls/PeriodControls";
 import { usePeriodControls } from "@/hooks/use-period-controls";
 import { ChartDataByPeriod } from "@/components/Chart/shared/types/chart-data";
 import { HomeHeader } from "@/sections/HomeHeader/HomeHeader";
+import { useSession } from "@/contexts/session/hook";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartDataByPeriod | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const { token } = useSession();
   const { signalHasNoMore, ...periodControls } = usePeriodControls({
     graphData,
   });
   const router = useRouter();
 
-  const logout = () => {
-    localStorage.removeItem(SWILE_TOKEN_LS_KEY);
-    router.push("/");
-  };
-
   useEffect(() => {
-    const token = localStorage.getItem(SWILE_TOKEN_LS_KEY);
-    setToken(token);
     if (token === null) {
       return router.replace("/login");
     }
@@ -51,7 +44,7 @@ export default function Graph() {
         setError("Une erreur est survenue, le token est peut-être invalide."),
       )
       .finally(() => setIsLoading(false));
-  }, [router, signalHasNoMore, periodControls.beforeDate]);
+  }, [token, router, signalHasNoMore, periodControls.beforeDate]);
 
   if (token === null) {
     return null;
@@ -59,7 +52,7 @@ export default function Graph() {
 
   return (
     <>
-      <HomeHeader logout={logout} />
+      <HomeHeader />
       <main className="w-full px-4 flex flex-col items-center">
         {isLoading ? (
           <LoadingChart />
