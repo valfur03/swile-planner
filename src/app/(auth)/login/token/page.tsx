@@ -6,17 +6,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export default async function TokenLogin() {
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Se connecter</CardTitle>
-        <CardDescription>Entrez votre access token Swile</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <TokenForm />
-      </CardContent>
-    </Card>
+    <div className="max-w-md flex flex-col gap-4 w-full">
+      <Alert>
+        <ExclamationTriangleIcon className="h-4 w-4" />
+        <AlertTitle>Attention !</AlertTitle>
+        <AlertDescription>
+          Cette fonctionnalité est réservée aux utilisateurs qui la connaissent.
+          Dans la majorité des cas, vous devriez vous connecter avec Swile.
+        </AlertDescription>
+      </Alert>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Se connecter</CardTitle>
+          <CardDescription>Entrez votre access token Swile</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <TokenForm />
+        </CardContent>
+      </Card>
+    </div>
   );
 }
