@@ -8,10 +8,10 @@ import { useEffect, useState } from "react";
 import { LoadingChart } from "@/components/Chart/LoadingChart";
 import { useRouter } from "next/navigation";
 import { SWILE_TOKEN_LS_KEY } from "@/data/swile/constants";
-import { Button } from "@/components/ui/button";
 import { PeriodControls } from "@/components/PeriodControls/PeriodControls";
 import { usePeriodControls } from "@/hooks/use-period-controls";
 import { ChartDataByPeriod } from "@/components/Chart/shared/types/chart-data";
+import { HomeHeader } from "@/sections/HomeHeader/HomeHeader";
 
 export default function Graph() {
   const [graphData, setGraphData] = useState<ChartDataByPeriod | null>(null);
@@ -59,14 +59,7 @@ export default function Graph() {
 
   return (
     <>
-      <header className="text-center w-full mt-2 mb-6 md:mb-10 md:mt-3 px-4 flex items-center justify-center">
-        <div className="max-w-xl w-full flex flex-col justify-center gap-2 items-end">
-          <Button variant="link" onClick={logout}>
-            Se déconnecter
-          </Button>
-          <h1>Qu&apos;ai-je utilisé sur ma Swile ?</h1>
-        </div>
-      </header>
+      <HomeHeader logout={logout} />
       <main className="w-full px-4 flex flex-col items-center">
         {isLoading ? (
           <LoadingChart />
