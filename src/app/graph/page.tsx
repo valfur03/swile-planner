@@ -18,7 +18,9 @@ export default function Graph() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const periodControls = usePeriodControls({ graphData });
+  const { signalHasNoMore, ...periodControls } = usePeriodControls({
+    graphData,
+  });
   const router = useRouter();
 
   const logout = () => {
@@ -40,7 +42,7 @@ export default function Graph() {
     })
       .then((operations) => {
         if (!operations.hasMore) {
-          periodControls.signalHasNoMore();
+          signalHasNoMore();
         }
         return buildPlannedPaymentsGraphData(operations.items);
       })
@@ -49,7 +51,7 @@ export default function Graph() {
         setError("Une erreur est survenue, le token est peut-être invalide."),
       )
       .finally(() => setIsLoading(false));
-  }, [router, periodControls.beforeDate]);
+  }, [router, signalHasNoMore, periodControls.beforeDate]);
 
   if (token === null) {
     return null;

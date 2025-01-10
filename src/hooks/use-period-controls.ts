@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ChartDataByPeriod } from "@/components/Chart/shared/types/chart-data";
 
 export type UsePeriodControlsArgs = {
@@ -44,9 +44,9 @@ export const usePeriodControls = ({
     setPeriodIndex((current) => current + 1);
   };
 
-  const signalHasNoMore = () => {
+  const signalHasNoMore = useCallback(() => {
     setHasNoMore(true);
-  };
+  }, []);
 
   return {
     beforeDate:

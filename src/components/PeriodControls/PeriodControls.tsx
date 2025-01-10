@@ -1,7 +1,10 @@
 import { Button, ButtonProps } from "@/components/ui/button";
 import { UsePeriodControls } from "@/hooks/use-period-controls";
 
-export type PeriodControlsProps = UsePeriodControls & {
+export type PeriodControlsProps = Pick<
+  UsePeriodControls,
+  "hasBefore" | "hasAfter" | "selectPreviousPeriod" | "selectNextPeriod"
+> & {
   isLoading?: boolean;
 };
 
