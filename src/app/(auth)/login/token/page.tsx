@@ -11,7 +11,7 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export default async function TokenLogin() {
   return (
-    <div className="max-w-md flex flex-col gap-4 w-full">
+    <div className="max-w-md flex flex-col gap-4 w-full p-4">
       <Alert>
         <ExclamationTriangleIcon className="h-4 w-4" />
         <AlertTitle>Attention !</AlertTitle>
