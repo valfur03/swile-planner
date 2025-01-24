@@ -22,7 +22,16 @@ export function getSumOfAllPaymentsThisDay(
   const paymentsThisDay = getPaymentsOnDate(operations, date);
 
   return paymentsThisDay.reduce(
-    (acc, { amount }) => acc + Math.abs(fromCentsToEur(amount.value)),
+    (acc, { transactions }) =>
+      acc +
+      transactions
+        .filter(
+          ({ wallet }) => wallet !== null && wallet.type === "meal_voucher",
+        )
+        .reduce(
+          (acc, { amount }) => acc + fromCentsToEur(Math.abs(amount.value)),
+          0,
+        ),
     0,
   );
 }

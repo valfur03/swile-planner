@@ -1,6 +1,10 @@
 export type SwileOperation = {
   date: string;
   amount: { value: number };
+  transactions: Array<{
+    wallet: { type: "meal_voucher" | string } | null;
+    amount: { value: number };
+  }>;
 };
 
 export type SwileFetchOperationsQueryParams = {
